@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config();
 const DATABASE_URL = process.env.DATABASE_URL || global.DATABASE_URL || 'postgresql://localhost/hacker-news-api';
 
 exports.DATABASE = {
