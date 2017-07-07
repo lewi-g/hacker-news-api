@@ -14,17 +14,25 @@ app.use(morgan(':method :url :res[location] :status'));
 
 app.use(bodyParser.json());
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT');
+  next();
+});
+
 app.get('/', (req, res) => {
   res.send('hello world');
 });
 // ADD ENDPOINTS HERE
 
-app.post('/api/stories', jsonParser, (req,res) => {
+app.post('/api/stories', jsonParser, (req, res) => {
+  console.log(req.body);
   const requiredFields = ['title', 'url'];
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
-      const message = `Missing \`${field}\` in request body`
+      const message = `Missing \`${field}\` in request body`;
       console.error(message);
       return res.status(400).send(message);
     }
@@ -36,7 +44,6 @@ app.post('/api/stories', jsonParser, (req,res) => {
     .then((resultSet) => {
       //console.log(resultSet.json());
       return res.status(201).json(resultSet);
-
     })
     .catch(err => {
       console.error(err);
@@ -52,7 +59,6 @@ app.get('/api/stories', (req, res) => {
     .then((results) => {
       return res.status(200).json(results);
     });
-  
 });
 
 app.put('/api/stories/:id', jsonParser, (req, res) => {
