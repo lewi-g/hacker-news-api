@@ -44,6 +44,33 @@ app.post('/api/stories', jsonParser, (req,res) => {
     });
 });
 
+app.get('/api/stories', (req, res) => {
+  knex('news')
+    .select()
+    .orderBy('votes', 'desc')
+    .limit(20)
+    .then((results) => {
+      return res.status(200).json(results);
+    });
+  
+});
+
+app.put('/api/stories/:id', jsonParser, (req, res) => {
+  console.log(req.params.id);
+  console.log(req.body.id);
+  // if (req.params.id !== req.body.id) {
+  //   const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
+  //   console.error(message);
+  //   return res.status(400).send(message);
+  // }
+  knex('news')
+    .where('id', req.params.id)
+    .increment('votes', 1 )
+    .then((results) => {return res.status(204).end()
+    });
+});
+
+
 let server;
 let knex;
 function runServer(database = DATABASE, port = PORT) {
