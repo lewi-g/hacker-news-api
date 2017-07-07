@@ -29,17 +29,19 @@ app.post('/api/stories', jsonParser, (req,res) => {
       return res.status(400).send(message);
     }
   }
+  console.log(req.body.url);
   knex('news')
-    .update('title', 'url')
-    .where('title', 'text')
-    .andWhere('url', 'text')
+    .insert({'title': req.body.title, 'url': req.body.url})
+    .returning(['title', 'url', 'id', 'votes'])
     .then((resultSet) => {
-        return res.status(201).json(resultSet);
+      //console.log(resultSet.json());
+      return res.status(201).json(resultSet);
+
     })
     .catch(err => {
-        console.error(err);
-        return res.status(500).json(err.message);
-    })
+      console.error(err);
+      return res.status(500).json(err.message);
+    });
 });
 
 let server;
