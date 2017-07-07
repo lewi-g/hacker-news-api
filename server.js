@@ -25,9 +25,9 @@ app.get('/', (req, res) => {
   res.send('hello world');
 });
 // ADD ENDPOINTS HERE
-
 app.post('/api/stories', jsonParser, (req, res) => {
   console.log(req.body);
+
   const requiredFields = ['title', 'url'];
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -37,6 +37,7 @@ app.post('/api/stories', jsonParser, (req, res) => {
       return res.status(400).send(message);
     }
   }
+
   console.log(req.body.url);
   knex('news')
     .insert({'title': req.body.title, 'url': req.body.url})
